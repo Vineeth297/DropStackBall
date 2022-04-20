@@ -8,9 +8,13 @@ public class Ball : MonoBehaviour
 
 	private void Update()
 	{
+		if(Input.GetMouseButtonDown(0))
+			print("Tap");
 		if (Input.GetMouseButton(0))
 		{
+			print("Held");
 			transform.Translate(Vector3.down * (Time.deltaTime * speed));
 		}
+		
 	}
 }
