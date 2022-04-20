@@ -26,6 +26,7 @@ public class TileSpawnManager : MonoBehaviour
 			//parentObject.transform.SetParent(obj.transform.parent);
 			tilesList.Add(obj);
 		}
+		
 	}
 	
 	
