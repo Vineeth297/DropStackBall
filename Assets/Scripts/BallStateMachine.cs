@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BallStateMachine : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class BallStateMachine : MonoBehaviour
 
     public Animator animator;
     
-    [SerializeField] private float speed;
+    public float speed;
 
     private void Start()
     {
@@ -18,12 +19,15 @@ public class BallStateMachine : MonoBehaviour
     }
 
     private void Update()
-    {
-       if(Input.GetMouseButtonDown(0))
+	{
+		if (Input.GetKeyDown(KeyCode.R))
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+		if(Input.GetMouseButton(0))
            _currentState.UpdateState(this);
-       if(Input.GetMouseButton(0))
-           transform.Translate(Vector3.down * (Time.deltaTime * speed));
-    }
+		if(Input.GetMouseButtonUp(0))
+			_currentState.UpdateState(this);
+	}
 
     public void SwitchState(BallBaseState state)
     {

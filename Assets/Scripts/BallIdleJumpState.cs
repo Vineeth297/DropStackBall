@@ -1,15 +1,16 @@
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class BallIdleJumpState : BallBaseState    
 {
     public override void EnterState(BallStateMachine ball)
-    {
-        ball.animator.enabled = true;
-    }
+	{
+		ball.animator.SetBool(JumpHash, false);
+	}
 
-    public override void UpdateState(BallStateMachine ball)
+	public override void UpdateState(BallStateMachine ball)
     {
-        if(Input.GetMouseButton(0))
+		if(Input.GetMouseButtonDown(0))
             ball.SwitchState(ball.shootState);
     }
 }
