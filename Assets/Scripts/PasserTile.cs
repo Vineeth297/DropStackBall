@@ -26,7 +26,7 @@ public class PasserTile : MonoBehaviour
         if (!other.CompareTag("Player")) return;
         transform.parent = null;
         //Fly away
-        _rb.isKinematic = false;
+        //_rb.isKinematic = false;
         AddForceAtAnAngle(forceToApply, angleOfForce);
         _collider.enabled = false;
     }
