@@ -31,6 +31,7 @@ public class PasserTile : MonoBehaviour
         _collider.enabled = false;
     }
 
+	
     private void AddForceAtAnAngle(float force, float angle)
     {
         angle *= Mathf.Deg2Rad;
