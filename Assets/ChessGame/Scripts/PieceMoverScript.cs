@@ -187,6 +187,7 @@ public class PieceMoverScript : MonoBehaviour
 				print("CanMove");
 			}
 			InvalidMove();
+			
 		}
 	}
 
