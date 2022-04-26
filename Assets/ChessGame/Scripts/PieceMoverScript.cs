@@ -45,7 +45,6 @@ public class PieceMoverScript : MonoBehaviour
 						selectedTransform = hit.collider.gameObject.transform;
 						pieceSelected = !pieceSelected;
 						//check if its valid move ??
-
 					}
 				}
 			}
@@ -108,7 +107,7 @@ public class PieceMoverScript : MonoBehaviour
 				{
 					if (!checkBoxes[currentIndex + (8 * i)].GetComponent<CheckBox>().isOccupied)
 					{
-						print(checkBoxes[currentIndex + (8 * i)].GetComponent<CheckBox>().isOccupied);
+						//	print(checkBoxes[currentIndex + (8 * i)].GetComponent<CheckBox>().isOccupied);
 						numberOfEmptyBoxes += 1;
 					}
 					else
@@ -121,7 +120,7 @@ public class PieceMoverScript : MonoBehaviour
 				{
 					if (!checkBoxes[currentIndex - (8 * i)].GetComponent<CheckBox>().isOccupied)
 					{
-						print(checkBoxes[currentIndex - (8 * i)].GetComponent<CheckBox>().isOccupied);
+						//print(checkBoxes[currentIndex - (8 * i)].GetComponent<CheckBox>().isOccupied);
 						numberOfEmptyBoxes += 1;
 					}
 					else
@@ -136,19 +135,15 @@ public class PieceMoverScript : MonoBehaviour
 			{
 				//if there is enemy on final Check box => kill
 				ValidateOccupancyAndMove(finalMove);
-				print("CanMove");
+				//print("CanMove");
 			}
 		}
 		//Horizontal Switch
 		else if(MathF.Abs(currentIndex - finalPositionIndex) < 8)
 		{
 			var maxIterationNumber = Mathf.Abs(currentIndex - finalPositionIndex);
-			var lowestAllowedIndex = currentIndex - 8;
-			var hightestAllowedIndex = currentIndex + lowestAllowedIndex + 1;
 			var numberOfEmptyBoxes = 0;
-			
-			RookInvalidCases();
-			
+			print("Max Iter Number " + maxIterationNumber);
 			for (var i = 1; i <= maxIterationNumber; i++)
 			{
 				print(currentIndex);
@@ -156,7 +151,8 @@ public class PieceMoverScript : MonoBehaviour
 				{
 					if (!checkBoxes[currentIndex + i].GetComponent<CheckBox>().isOccupied)
 					{
-						print(checkBoxes[currentIndex + i].GetComponent<CheckBox>().isOccupied);
+						//print(checkBoxes[currentIndex + i].GetComponent<CheckBox>().isOccupied);
+						//move the piece
 						numberOfEmptyBoxes += 1;
 					}
 					else
@@ -169,7 +165,8 @@ public class PieceMoverScript : MonoBehaviour
 				{
 					if (!checkBoxes[currentIndex - i].GetComponent<CheckBox>().isOccupied)
 					{
-						print(checkBoxes[currentIndex - i].GetComponent<CheckBox>().isOccupied);
+						//print(checkBoxes[currentIndex - i].GetComponent<CheckBox>().isOccupied);
+						//move the piece
 						numberOfEmptyBoxes += 1;
 					}
 					else
@@ -179,14 +176,17 @@ public class PieceMoverScript : MonoBehaviour
 					}
 				}
 			}
-			print("Number of Empty Boxes " + numberOfEmptyBoxes);
+			//print("Number of Empty Boxes " + numberOfEmptyBoxes);
 			
 			if(numberOfEmptyBoxes == maxIterationNumber)
 			{
-				ValidateOccupancyAndMove(finalMove);
 				print("CanMove");
+				//ValidateOccupancyAndMove(finalMove);
+				MoveTheRook(currentIndex,finalPositionIndex);
+				print("CanMove");
+
 			}
-			InvalidMove();
+			else InvalidMove();
 			
 		}
 	}
@@ -232,22 +232,22 @@ public class PieceMoverScript : MonoBehaviour
 			InvalidMove();
 	}
 
-	private void RookInvalidCases()
+	private void MoveTheRook(int currentIndex, int finalPositionIndex)
 	{
-		var currentIndex = Array.IndexOf(checkBoxPositions, selectedTransform.parent.position);
-		var finalPositionIndex = Array.IndexOf(checkBoxPositions, finalTransform.position);
-
-		/*
-		if (Array.IndexOf(checkBoxPositions, finalTransform.position) != (currentIndex + 7) ||
-			Array.IndexOf(checkBoxPositions, finalTransform.position) != (currentIndex + 9) ||
-			Array.IndexOf(checkBoxPositions, finalTransform.position) != (currentIndex - 7) ||
-			Array.IndexOf(checkBoxPositions, finalTransform.position) != (currentIndex - 9))
-		{
-			
-		}*/
+		/*var currentIndex = Array.IndexOf(checkBoxPositions, selectedTransform.parent.position);
+		var finalPositionIndex = Array.IndexOf(checkBoxPositions, finalTransform.position);*/
 
 		var minIndex = 0;
 		var maxIndex = 0;
+		
+		if (finalPositionIndex == (currentIndex + 7) ||
+		    finalPositionIndex == (currentIndex + 9) ||
+		    finalPositionIndex == (Mathf.Abs(currentIndex - 7)) ||
+		    finalPositionIndex == (Mathf.Abs(currentIndex - 9)))
+		{
+			InvalidMove();
+			return;
+		}
 
 		if (currentIndex >= 0 && currentIndex < 8)
 		{
@@ -290,6 +290,26 @@ public class PieceMoverScript : MonoBehaviour
 			maxIndex = 63;
 		}
 		
-		
+		//if the final position falls between min and max => move the piece
+		print(minIndex);
+		print(maxIndex);
+		print(finalPositionIndex);
+		if (finalPositionIndex >= minIndex && finalPositionIndex <= maxIndex)
+		{
+			print("MOveMethod");
+			MoveThePiece(finalTransform);
+		}
+		else return;
+	}
+
+	private void FoundInvalidMoveCase(int currentIndex, int finalPositionIndex)
+	{
+		if (finalPositionIndex == (currentIndex + 7) ||
+		    finalPositionIndex == (currentIndex + 9) ||
+		    finalPositionIndex == (Mathf.Abs(currentIndex - 7)) ||
+		    finalPositionIndex == (Mathf.Abs(currentIndex - 9)))
+		{
+			InvalidMove();
+		}
 	}
 }
