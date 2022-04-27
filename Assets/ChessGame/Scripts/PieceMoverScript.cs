@@ -17,9 +17,13 @@ public class PieceMoverScript : MonoBehaviour
 
 	public Vector3[] checkBoxPositions = new Vector3[64];
 	
+	[SerializeField] private List<List<Vector3>> _checkBoxPositions;
+	private Vector3[,] _boxes = new Vector3[8,8];
+
 	private void Start()
 	{
 		_camera = Camera.main;
+		_checkBoxPositions = new List<List<Vector3>>();
 		FillTheBoxes();
 	}
 
@@ -44,7 +48,16 @@ public class PieceMoverScript : MonoBehaviour
 					{
 						selectedTransform = hit.collider.gameObject.transform;
 						pieceSelected = !pieceSelected;
+
+						int i = -1;
+						int j = -1;
+						
+						FindTheIndex(out i,out j);
+						
+						if(i == -1 || j == -1) print("gadbad scenes");
+
 						//check if its valid move ??
+
 					}
 				}
 			}
@@ -53,6 +66,8 @@ public class PieceMoverScript : MonoBehaviour
 
 	private void SoldierFunction(Transform finalMove)
 	{
+
+		//var index = _checkBoxPositions.
 		var currentIndex = Array.IndexOf(checkBoxPositions, selectedTransform.parent.position);
 		var validMoveIndex = currentIndex + 8;
 		var killerMoveIndex1 = currentIndex + 7;
@@ -71,14 +86,28 @@ public class PieceMoverScript : MonoBehaviour
 		}
 		else
 			InvalidMove();
+		
+		
 	}
 
 	private void FillTheBoxes()
 	{
-		for (var i = 0; i < 64; i++)
+		/*for (var i = 0; i < 64; i++)
 		{
 			checkBoxPositions[i] = checkBoxes[i].transform.position;
 			Debug.DrawRay(checkBoxPositions[i], Vector3.up, Color.red, 2f);
+		}*/
+
+		for (var i = 0; i < 8; i++)
+		{
+			var newList = new List<Vector3>();
+			for (var j = 0; j < 8; j++)
+			{
+				newList.Add(checkBoxes[(i * 8) + j].transform.position);
+				Debug.DrawRay(newList[j], Vector3.up, Color.red, 2f);
+				print(newList[j]);
+			}
+			_checkBoxPositions.Add(newList);
 		}
 	}
 
@@ -87,13 +116,40 @@ public class PieceMoverScript : MonoBehaviour
 		print("Invalid Move");
 	}
 
+	private void FindTheIndex(out int rowNum, out int columnNum)
+	{
+		var rowNumber = -1;
+		var columnNumber = -1;
+		foreach (var column in _checkBoxPositions)
+		{
+			rowNumber++;
+			
+			var idx = column.IndexOf(selectedTransform.parent.position);
+			
+			if(idx == -1) continue;
+
+			columnNumber = idx;
+			break;
+		}
+
+		columnNum = columnNumber;
+		rowNum = rowNumber;
+	}
 	private void RookFunction(Transform finalMove)
 	{
+		/*var array2D = new int[8][];
+
+		foreach (var row in array2D)
+		{
+			Array.IndexOf(row, selectedTransform.parent.position);
+		}*/
+		
 		//final position is divisible by 8
 		var currentIndex = Array.IndexOf(checkBoxPositions, selectedTransform.parent.position);
+		//var index = FindTheIndex();
 		var finalPositionIndex = Array.IndexOf(checkBoxPositions, finalMove.position);
 		var remainder = (Mathf.Abs(currentIndex - finalPositionIndex)) % 8;
-		
+		//print(index);
 		//Vertical Switch
 		if (remainder == 0)
 		{
